@@ -1,4 +1,6 @@
 use anchor_lang::prelude::*;
+ 
+
 
 declare_id!("FV7AuEp4Z8XUhsnW3pjtgpks8H4gphkWuvZLpvDj8dLD");
 
@@ -13,6 +15,15 @@ pub mod solana_twitter {
 
 #[derive(Accounts)]
 pub struct Initialize {}
+
+#[derive(Accounts)]
+pub struct SendTweet<'info> {
+    #[account(init, payer = author, space = Tweet::LEN)]
+    pub tweet: Account<'info, Tweet>,
+    #[account(mut)] // Make the author mutable so different authors can create tweets
+    pub author: Signer<'info>,
+    pub system_program: Program<'info, System>,
+}
 
 #[account]
 pub struct Tweet {
