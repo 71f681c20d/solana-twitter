@@ -1,12 +1,24 @@
 use anchor_lang::prelude::*;
- 
+use anchor_lang::solana_program::entrypoint::ProgramResult;
+
 
 
 declare_id!("FV7AuEp4Z8XUhsnW3pjtgpks8H4gphkWuvZLpvDj8dLD");
 
 #[program]
 pub mod solana_twitter {
+
     use super::*;
+
+    impl From<ErrorCode> for ProgramError {
+        fn from(error: ErrorCode) -> Self {
+            match error {
+                ErrorCode::TopicTooLong => ProgramError::Custom(1), // custom error code
+                ErrorCode::ContentTooLong => ProgramError::Custom(2), // custom error code
+                // add other error code conversions here
+            }
+        }
+    }
 
     pub fn send_tweet(ctx: Context<SendTweet>, topic: String, content: String) -> ProgramResult {
         let tweet: &mut Account<Tweet> = &mut ctx.accounts.tweet;
