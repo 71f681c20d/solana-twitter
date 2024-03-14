@@ -1,5 +1,6 @@
 import * as anchor from "@coral-xyz/anchor";
 import { AnchorError } from "@coral-xyz/anchor";
+import { bs58 } from "@coral-xyz/anchor/dist/cjs/utils/bytes";
 import { assert } from "chai";
 
 describe("solana-twitter", () => {
@@ -66,7 +67,7 @@ describe("solana-twitter", () => {
     // Call the "SendTweet" instruction on behalf of this other user.
     const tweet = anchor.web3.Keypair.generate();
     await program.methods
-      .sendTweet('Someone else', 'Published from another author')
+      .sendTweet('Solana is fast', 'Published from another author')
       .accounts({
         tweet: tweet.publicKey,
         author: otherUser.publicKey,
@@ -80,7 +81,7 @@ describe("solana-twitter", () => {
 
     // Ensure it has the right data.
     assert.equal(tweetAccount.author.toBase58(), otherUser.publicKey.toBase58());
-    assert.equal(tweetAccount.topic, 'Someone else');
+    assert.equal(tweetAccount.topic, 'Solana is fast');
     assert.equal(tweetAccount.content, 'Published from another author');
     assert.ok(tweetAccount.timestamp);
   });
@@ -111,7 +112,7 @@ describe("solana-twitter", () => {
 
   it('cannot provide content with more than 280 characters', async () => {
     const tweet = anchor.web3.Keypair.generate();
-    const contentWith281Chars = 'x'.repeat(281); // 51 characters long
+    const contentWith281Chars = 'x'.repeat(281); // 281 characters long
     try {
       await program.methods
         .sendTweet('Some topic', contentWith281Chars)
@@ -131,6 +132,49 @@ describe("solana-twitter", () => {
       return;
     }
     assert.fail('The instruction should have failed with a 281-character content.');
+  });
+
+  it('can fetch all tweets', async () => {
+    // The previous 5 tests should have created 3 tweet accounts
+    const tweetAccounts = await program.account.tweet.all(); // Fetch all accounts sharing the public key of the program account
+    assert.equal(tweetAccounts.length, 3); // verify all the accounts were created
+  });
+
+  it('can filter tweets by author', async () => {
+    const authorPublicKey = program.provider.wallet.publicKey
+    const tweetAccounts = await program.account.tweet.all([
+      {
+        memcmp: {
+          offset: 8, // Discriminator ends at 8 bytes in the account data
+          bytes: authorPublicKey.toBase58(), // The author's public key
+        }
+      }
+    ]);
+    // At this point, the program account should have 2 tweet accounts created by the same author; 1 was created from a different author
+    assert.equal(tweetAccounts.length, 2);
+    // verify the tweets came from the correct author
+    assert.ok(tweetAccounts.every(tweetAccount => {
+      return tweetAccount.account.author.toBase58() === authorPublicKey.toBase58()
+    }))
+  });
+
+  it('can filter tweets by topics', async () => {
+    const tweetAccounts = await program.account.tweet.all([
+      {
+        memcmp: {
+          offset: 8 + // Discriminator.
+            32 + // Author public key.
+            8 + // Timestamp.
+            4, // Topic string prefix.
+          bytes: bs58.encode(Buffer.from('Solana is fast')), // encode string for memcmp
+        }
+      }
+    ]);
+
+    assert.equal(tweetAccounts.length, 2);
+    assert.ok(tweetAccounts.every(tweetAccount => {
+      return tweetAccount.account.topic === 'Solana is fast'
+    }))
   });
 
 });
