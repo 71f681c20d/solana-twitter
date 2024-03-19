@@ -10,7 +10,10 @@
   "dependencies": {
     "@project-serum/anchor": "^0.26.0",
     "@solana/web3.js": "^1.91.1",
+    "autoprefixer": "^10.4.18",
     "core-js": "^3.8.3",
+    "postcss": "^8.4.36",
+    "tailwindcss": "^3.4.1",
     "vue": "^3.2.13"
   },
   "devDependencies": {
