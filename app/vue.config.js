@@ -18,6 +18,10 @@ module.exports = defineConfig({
         util: false,
         path: false,
         stream: false,
+        url: false,
+        http: false,
+        https: false,
+        zlib: false,
       }
     }
   }
