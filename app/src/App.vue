@@ -1,18 +1,26 @@
 <script setup>
 import { useRoute } from 'vue-router'
 import TheSidebar from './components/TheSidebar'
-import { PhantomWalletAdapter, SolflareWalletAdapter } from '@solana/wallet-adapter-wallets'
+// import SolanaWallets from 'solana-wallets-vue';
 import { initWallet } from 'solana-wallets-vue'
 
 
 const route = useRoute()
 
 // Import wallet providers (Phantom and Solflare)
-const wallets = [
-    new PhantomWalletAdapter(),
-    new SolflareWalletAdapter(),
-]
-initWallet({ wallets, autoConnect: true }); // Initialize wallet
+import {
+    PhantomWalletAdapter,
+    SolflareWalletAdapter,
+} from '@solana/wallet-adapter-wallets';
+
+const walletOptions = {
+    wallets: [
+        new PhantomWalletAdapter(),
+        new SolflareWalletAdapter({ network: 'devnet' }),
+    ],
+    autoConnect: true,
+}
+initWallet(walletOptions); // Initialize wallet
 
 </script>
 
