@@ -1,8 +1,8 @@
 <script setup>
 import { useRoute } from 'vue-router'
 import TheSidebar from './components/TheSidebar'
-// import SolanaWallets from 'solana-wallets-vue';
 import { initWallet } from 'solana-wallets-vue'
+import { initWorkspace } from '@/composables'
 
 
 const route = useRoute()
@@ -21,6 +21,7 @@ const walletOptions = {
     autoConnect: true,
 }
 initWallet(walletOptions); // Initialize wallet
+initWorkspace()
 
 </script>
 
