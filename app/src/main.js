@@ -1,3 +1,5 @@
+// Import CSS styling
+import 'solana-wallets-vue/styles.css'
 import './main.css'
 
 // Routing.
