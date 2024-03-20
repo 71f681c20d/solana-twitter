@@ -1,45 +1,45 @@
 <script setup>
-import { computed, ref, toRefs } from 'vue'
-import { useAutoresizeTextarea, useCountCharacterLimit, useSlug } from '@/composables'
-import { sendTweet } from '@/api'
-import { useWallet } from 'solana-wallets-vue'
+import { computed, ref, toRefs } from 'vue';
+import { useAutoresizeTextarea, useCountCharacterLimit, useSlug } from '@/composables';
+import { sendTweet } from '@/api';
+import { useWallet } from 'solana-wallets-vue';
 
 // Props.
 const props = defineProps({
     forcedTopic: String,
-})
-const { forcedTopic } = toRefs(props)
+});
+const { forcedTopic } = toRefs(props);
 
 // Form data.
-const content = ref('')
-const topic = ref('')
-const slugTopic = useSlug(topic)
-const effectiveTopic = computed(() => forcedTopic.value ?? slugTopic.value)
+const content = ref('');
+const topic = ref('');
+const slugTopic = useSlug(topic);
+const effectiveTopic = computed(() => forcedTopic.value ?? slugTopic.value);
 
 // Auto-resize the content's textarea.
-const textarea = ref()
-useAutoresizeTextarea(textarea)
+const textarea = ref();
+useAutoresizeTextarea(textarea);
 
 // Character limit / count-down.
-const characterLimit = useCountCharacterLimit(content, 280)
+const characterLimit = useCountCharacterLimit(content, 280);
 const characterLimitColour = computed(() => {
-    if (characterLimit.value < 0) return 'text-red-500'
-    if (characterLimit.value <= 10) return 'text-yellow-500'
-    return 'text-gray-400'
-})
+    if (characterLimit.value < 0) return 'text-red-500';
+    if (characterLimit.value <= 10) return 'text-yellow-500';
+    return 'text-gray-400';
+});
 
 // Permissions.
 const { connected } = useWallet()
-const canTweet = computed(() => content.value && characterLimit.value > 0)
+const canTweet = computed(() => content.value && characterLimit.value > 0);
 
 // Actions.
-const emit = defineEmits(['added'])
+const emit = defineEmits(['added']);
 const send = async () => {
-    if (! canTweet.value) return
-    const tweet = await sendTweet(effectiveTopic.value, content.value)
-    emit('added', tweet)
-    topic.value = ''
-    content.value = ''
+    if (! canTweet.value) return;
+    const tweet = await sendTweet(effectiveTopic.value, content.value);
+    emit('added', tweet);
+    topic.value = '';
+    content.value = '';
 }
 </script>
 
