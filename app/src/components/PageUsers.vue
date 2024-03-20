@@ -1,43 +1,43 @@
 <script setup>
-import { ref } from 'vue'
-import { useRouter } from 'vue-router'
-import { fetchTweets } from '@/api'
-import { useFromRoute } from '@/composables'
-import TweetList from '@/components/TweetList'
-import TweetSearch from '@/components/TweetSearch'
+import { ref } from 'vue';
+import { useRouter } from 'vue-router';
+import { fetchTweets, authorFilter } from '@/api';
+import { useFromRoute } from '@/composables';
+import TweetList from '@/components/TweetList';
+import TweetSearch from '@/components/TweetSearch';
 
-// Data.
-const router = useRouter()
-const tweets = ref([])
-const loading = ref(true)
-const author = ref('')
-const viewedAuthor = ref('')
+// Data
+const router = useRouter();
+const tweets = ref([]);
+const loading = ref(true);
+const author = ref('');
+const viewedAuthor = ref('');
 
-// Actions.
+// Actions
 const search = () => {
-    router.push(`/users/${author.value}`)
+    router.push(`/users/${author.value}`);
 }
 
 const fetchAuthorTweets = async () => {
     if (author.value === viewedAuthor.value) return
     try {
-        loading.value = true
-        const fetchedTweets = await fetchTweets()
-        tweets.value = fetchedTweets
-        viewedAuthor.value = author.value
+        loading.value = true;
+        const fetchedTweets = await fetchTweets([authorFilter(author.value)]);
+        tweets.value = fetchedTweets;
+        viewedAuthor.value = author.value;
     } finally {
-        loading.value = false
+        loading.value = false;
     }
 }
 
-// Router hooks.
+// Router hooks
 useFromRoute((route) => {
-    author.value = route.params.author
+    author.value = route.params.author;
     if (author.value) {
-        fetchAuthorTweets()
+        fetchAuthorTweets();
     } else {
-        tweets.value = []
-        viewedAuthor.value = ''
+        tweets.value = [];
+        viewedAuthor.value = '';
     }
 })
 </script>

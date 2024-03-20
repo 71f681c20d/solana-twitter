@@ -11,11 +11,11 @@ export class Tweet
     }
 
     get key () {
-        return this.publicKey.toBase58();
+        return this.publicKey?.toBase58();
     }
 
     get author_display () {
-        const author = this.author.toBase58();
+        const author = this.author?.toBase58();
         return author.slice(0,4) + '..' + author.slice(-4);
     }
 
