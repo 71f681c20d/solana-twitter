@@ -15,7 +15,7 @@ describe("solana-twitter", () => {
     const tweet = anchor.web3.Keypair.generate();
 
     await program.methods
-      .sendTweet('Solana is fast', 'People don\'t like to use slow software. #solana')
+      .sendTweet('solana', 'People don\'t like to use slow software. #solana')
       .accounts({
         tweet: tweet.publicKey,
         author: program.provider.wallet.publicKey,
@@ -29,7 +29,7 @@ describe("solana-twitter", () => {
     // console.log(tweetAccount);
 
     assert.equal(tweetAccount.author.toBase58(), program.provider.wallet.publicKey.toBase58());
-    assert.equal(tweetAccount.topic, 'Solana is fast');
+    assert.equal(tweetAccount.topic, 'solana');
     assert.equal(tweetAccount.content, 'People don\'t like to use slow software. #solana');
     assert.ok(tweetAccount.timestamp);
   });
