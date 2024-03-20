@@ -166,14 +166,14 @@ describe("solana-twitter", () => {
             32 + // Author public key.
             8 + // Timestamp.
             4, // Topic string prefix.
-          bytes: bs58.encode(Buffer.from('Solana is fast')), // encode string for memcmp
+          bytes: bs58.encode(Buffer.from('solana')), // encode string for memcmp
         }
       }
     ]);
 
     assert.equal(tweetAccounts.length, 2);
     assert.ok(tweetAccounts.every(tweetAccount => {
-      return tweetAccount.account.topic === 'Solana is fast'
+      return tweetAccount.account.topic === 'solana'
     }))
   });
 
