@@ -1,3 +1,20 @@
+<!-- <a href="https://alexanderbarnard.com"> -->
+<h1 align="center">
+  <img src="data/logo.png" alt="Bavarder" width="192" height="192"/>
+  <br>
+  Bavarder
+</h1>
+
+<p align="center">
+  <strong>Tweet with your friends on Solana</strong>
+</p>
+</a>
+
+<p align="center">
+  <img src="./data/screenshot1.png" alt="Preview"/>
+</p>
+</a>
+
 # solana-twitter
 Twitter clone on solana
 
