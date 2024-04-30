@@ -1,8 +1,8 @@
 <!-- <a href="https://alexanderbarnard.com"> -->
 <h1 align="center">
-  <img src="data/logo.png" alt="Bavarder" width="192" height="192"/>
+  <img src="data/logo.png" alt="Solana Twitter" width="292" height="192"/>
   <br>
-  Bavarder
+  Solana Twitter
 </h1>
 
 <p align="center">
